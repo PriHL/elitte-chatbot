@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <title>Elitte Chat Manager</label>
+  <title>Elitte Chat Manager</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -39,11 +39,6 @@
 
     .btn-blue {
       background-color: #3b82f6;
-      color: white;
-    }
-
-    .btn-green {
-      background-color: #10b981;
       color: white;
     }
 
@@ -95,19 +90,10 @@
   </div>
 
   <script src="profiles.js"></script>
+  <script src="script.js"></script>
   <script>
-    let messages = {};
-    let contactsA = [];
-    let contactsB = [];
-
-    async function loadMessages() {
-      const response = await fetch("messages.json");
-      messages = await response.json();
-    }
-
-    async function loadContacts(grupo) {
-      const response = await fetch(grupo === 'A' ? "contacts_grupo_a.json" : "contacts_grupo_b.json");
-      return await response.json();
+    async function startAutomation(grupo) {
+      alert(`Automação iniciada para o Grupo ${grupo}`);
     }
 
     async function showContacts(grupo) {
@@ -122,19 +108,19 @@
 
         const info = document.createElement("div");
         info.innerHTML = `
-          <strong>@${contact.username}</strong><br/>
-          Status: <span class="status ${contact.sent ? 'enviado' : 'nao_enviado'}">
-            ${contact.sent ? contact.lastMessage : 'Não enviado'}
+          <strong>@${contact.Username}</strong><br/>
+          Status: <span class="status ${contact.Status === 'Enviado' ? 'enviado' : 'nao_enviado'}">
+            ${contact.Status}
           </span>
         `;
 
         const actions = document.createElement("div");
 
-        if (!contact.sent) {
+        if (contact.Status !== 'Enviado') {
           const sendBtn = document.createElement("button");
           sendBtn.textContent = "Enviar Mensagem";
           sendBtn.className = "btn btn-blue";
-          sendBtn.onclick = () => alert(`Mensagem enviada para @${contact.username}`);
+          sendBtn.onclick = () => alert(`Mensagem enviada para @${contact.Username}`);
 
           actions.appendChild(sendBtn);
         }
@@ -145,13 +131,9 @@
       });
     }
 
-    function startAutomation(grupo) {
-      alert(`Automação iniciada para o Grupo ${grupo}`);
-    }
-
     window.onload = async () => {
-      await loadMessages();
-      showContacts('A'); // Padrão é mostrar Grupo A
+      // Exibe contatos do Grupo A por padrão
+      showContacts('A');
     };
   </script>
 </body>
