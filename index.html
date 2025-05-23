@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elitte Chat Manager</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f3f4f6; /* gray-100 */
+      color: #1f2937; /* gray-800 */
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    p.subtitle {
+      font-size: 1rem;
+      color: #6b7280; /* gray-500 */
+      margin-bottom: 2rem;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 0.375rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-blue {
+      background-color: #4F46E5;
+      color: white;
+    }
+
+    .btn-blue:hover {
+      background-color: #3730a3;
+    }
+
+    .btn-gray {
+      background-color: #4B5563;
+      color: white;
+    }
+
+    .btn-gray:hover {
+      background-color: #1f2937;
+    }
+
+    .btn-green {
+      background-color: #10B981;
+      color: white;
+    }
+
+    .btn-green:hover {
+      background-color: #059669;
+    }
+
+    .messages {
+      margin-top: 3rem;
+      text-align: left;
+      background-color: white;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .messages h2 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      color: #111827;
+    }
+
+    .message-list {
+      list-style: disc inside;
+      color: #4b5563;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Elitte Chat Manager</h1>
+    <p class="subtitle">Controle de 10 perfis do Instagram</p>
+
+    <div class="buttons">
+      <button class="btn btn-blue" onclick="alert('Automação iniciada!')">Iniciar Automação</button>
+      <button class="btn btn-gray" onclick="showMessages()">Ver Histórico</button>
+      <button class="btn btn-green" onclick="editMessages()">Editar Mensagens</button>
+    </div>
+
+    <div class="messages" id="messagesSection" style="display:none;">
+      <h2>Mensagens Automáticas</h2>
+      <ul class="message-list">
+        <li><strong>Etapa 1:</strong> Ei! Tudo bem? Vi seu perfil e achei muito massa!</li>
+        <li><strong>Etapa 1:</strong> Oi! Sua vibe chamou minha atenção aqui no Instagram…</li>
+        <li><strong>Etapa 2:</strong> Legal conversar contigo! Como seu perfil tem chamado atenção...</li>
+        <li><strong>Etapa 3:</strong> Muito obrigado(a) por responder! Já estamos preparando sua ficha de cadastro...</li>
+        <li><strong>Etapa 3:</strong> Uau, adorei suas respostas! Vamos revisar tudo...</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function showMessages() {
+      document.getElementById('messagesSection').style.display = 'block';
+    }
+
+    function editMessages() {
+      let newMessage = prompt("Digite uma nova mensagem para a Etapa 1:");
+      if (newMessage) {
+        const ul = document.querySelector('.message-list');
+        const li = document.createElement('li');
+        li.innerHTML = "<strong>Etapa 1:</strong> " + newMessage;
+        ul.appendChild(li);
+      }
+    }
+  </script>
+</body>
+</html>
