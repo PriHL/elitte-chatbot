@@ -1,10 +1,9 @@
-// Substitua pelos links reais das planilhas publicadas como CSV
 const SHEET_URLS = {
-  contactsA: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vROHMCk571zNmUYWUwdkzK217sxF_vALvSTbm_tQ9wyRW5eqleXB4JfoGRUEnHB3T9zxxXS-PNIKCSO/pub?output=csv',
-  contactsB: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSnHTiggKHA64vES0rXQ7I-6imiVH4CBoBXlK73KeqMadODhffZbSfarp82Qsa9p7XLpiuiXIe-5EAP/pub?output=csv'
+  messages: 'COLE_AQUI_O_LINK_DA_PLANILHA_DE_MENSAGENS',
+  contactsA: 'COLE_AQUI_O_LINK_DA_PLANILHA_DE_CONTATOS_GRUPO_A',
+  contactsB: 'COLE_AQUI_O_LINK_DA_PLANILHA_DE_CONTATOS_GRUPO_B'
 };
 
-// Função para carregar CSV como JSON
 async function csvToJson(url) {
   const response = await fetch(url);
   const text = await response.text();
@@ -20,8 +19,20 @@ async function csvToJson(url) {
   return data;
 }
 
-// Função pública pra carregar contatos
+async function loadMessages() {
+  const data = await csvToJson(SHEET_URLS.messages);
+  const grouped = { grupoA: [], grupoB: [] };
+
+  data.forEach(row => {
+    if (row.Grupo === 'A') grouped.grupoA.push(row.Mensagem);
+    else if (row.Grupo === 'B') grouped.grupoB.push(row.Mensagem);
+  });
+
+  return grouped;
+}
+
 async function loadContacts(grupo) {
   const url = grupo === 'A' ? SHEET_URLS.contactsA : SHEET_URLS.contactsB;
-  return await csvToJson(url);
+  const data = await csvToJson(url);
+  return data;
 }

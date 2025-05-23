@@ -3,14 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <title>Elitte Chat Manager</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 2rem;
       background-color: #f3f4f6;
       color: #111827;
-      margin: 0;
     }
 
     .container {
@@ -22,12 +20,6 @@
     h1 {
       font-size: 2rem;
       margin-bottom: 0.5rem;
-    }
-
-    p.subtitle {
-      font-size: 1rem;
-      color: #6b7280;
-      margin-bottom: 2rem;
     }
 
     .buttons {
@@ -43,16 +35,10 @@
       border-radius: 0.375rem;
       cursor: pointer;
       transition: background-color 0.3s ease;
-      font-weight: bold;
     }
 
     .btn-blue {
       background-color: #3b82f6;
-      color: white;
-    }
-
-    .btn-green {
-      background-color: #10b981;
       color: white;
     }
 
@@ -72,10 +58,6 @@
       align-items: center;
     }
 
-    .profile-info strong {
-      display: block;
-    }
-
     .status {
       display: inline-block;
       padding: 4px 8px;
@@ -92,79 +74,66 @@
       background-color: #10b981;
       color: #f0fdf4;
     }
-
-    .actions button {
-      margin-left: 0.5rem;
-    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Elitte Chat Manager</h1>
-    <p class="subtitle">Controle de 10 Perfis do Instagram</p>
+    <p>Controle de 10 Perfis do Instagram</p>
 
     <div class="buttons">
-      <button class="btn btn-blue" onclick="showContacts('A')">Carregar Grupo A</button>
-      <button class="btn btn-green" onclick="showContacts('B')">Carregar Grupo B</button>
+      <button class="btn btn-blue" onclick="startAutomation('A')">Iniciar Automação - Grupo A</button>
+      <button class="btn btn-green" onclick="startAutomation('B')">Iniciar Automação - Grupo B</button>
     </div>
 
     <div class="contact-list" id="contactList"></div>
   </div>
 
-  <!-- Scripts -->
   <script src="profiles.js"></script>
   <script src="script.js"></script>
-
   <script>
-    async function showContacts(grupo) {
-      const container = document.getElementById("contactList");
-      container.innerHTML = `<h2>Contatos - Grupo ${grupo}</h2>`;
-
-      try {
-        // Carrega os contatos via CSV do Google Sheets
-        const contacts = await loadContacts(grupo);
-
-        if (!contacts.length) {
-          container.innerHTML += "<p>Nenhum contato encontrado.</p>";
-          return;
-        }
-
-        contacts.forEach(contact => {
-          const card = document.createElement("div");
-          card.className = "card";
-
-          const info = document.createElement("div");
-          info.innerHTML = `
-            <strong>@${contact.Username || contact.username}</strong><br/>
-            Status: <span class="status ${
-              contact.Status === 'Enviado' ? 'enviado' : 'nao_enviado'
-            }">${contact.Status || 'Não enviado'}</span>
-          `;
-
-          const actions = document.createElement("div");
-
-          if (contact.Status !== 'Enviado') {
-            const sendBtn = document.createElement("button");
-            sendBtn.textContent = "Enviar Mensagem";
-            sendBtn.className = "btn btn-blue";
-            sendBtn.onclick = () => alert(`Mensagem enviada para @${contact.Username}`);
-
-            actions.appendChild(sendBtn);
-          }
-
-          card.appendChild(info);
-          card.appendChild(actions);
-          container.appendChild(card);
-        });
-
-      } catch (error) {
-        console.error('Erro ao carregar contatos:', error);
-        container.innerHTML += "<p>Erro ao carregar contatos. Tente novamente mais tarde.</p>";
-      }
+    async function startAutomation(grupo) {
+      alert(`Automação iniciada para o Grupo ${grupo}`);
     }
 
-    window.onload = () => {
-      showContacts('A'); // Carrega o Grupo A por padrão
+    async function showContacts(grupo) {
+      const container = document.getElementById("contactList");
+      const contacts = await loadContacts(grupo);
+
+      container.innerHTML = `<h2>Contatos - Grupo ${grupo}</h2>`;
+
+      contacts.forEach(contact => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const info = document.createElement("div");
+        info.innerHTML = `
+          <strong>@${contact.Username}</strong><br/>
+          Status: <span class="status ${contact.Status === 'Enviado' ? 'enviado' : 'nao_enviado'}">
+            ${contact.Status}
+          </span>
+        `;
+
+        const actions = document.createElement("div");
+
+        if (contact.Status !== 'Enviado') {
+          const sendBtn = document.createElement("button");
+          sendBtn.textContent = "Enviar Mensagem";
+          sendBtn.className = "btn btn-blue";
+          sendBtn.onclick = () => alert(`Mensagem enviada para @${contact.Username}`);
+
+          actions.appendChild(sendBtn);
+        }
+
+        card.appendChild(info);
+        card.appendChild(actions);
+        container.appendChild(card);
+      });
+    }
+
+    window.onload = async () => {
+      // Exibe contatos do Grupo A por padrão
+      showContacts('A');
     };
   </script>
 </body>
