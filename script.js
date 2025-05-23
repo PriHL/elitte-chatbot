@@ -1,9 +1,4 @@
-const SHEET_URLS = {
-  messages: 'COLE_AQUI_O_LINK_DA_PLANILHA_DE_MENSAGENS',
-  contactsA: 'COLE_AQUI_O_LINK_DA_PLANILHA_DE_CONTATOS_GRUPO_A',
-  contactsB: 'COLE_AQUI_O_LINK_DA_PLANILHA_DE_CONTATOS_GRUPO_B'
-};
-
+// Carrega CSV como JSON
 async function csvToJson(url) {
   const response = await fetch(url);
   const text = await response.text();
@@ -19,13 +14,13 @@ async function csvToJson(url) {
   return data;
 }
 
-// Carregar mensagens por grupo
-async function loadMessages(grupo) {
-  const data = await csvToJson(SHEET_URLS.messages);
-  return data.filter(msg => msg.Grupo === grupo);
-}
+// URLs das planilhas
+const SHEET_URLS = {
+  contactsA: 'COLE_AQUI_O_LINK_DA_PLANILHA_DE_CONTATOS_GRUPO_A',
+  contactsB: 'COLE_AQUI_O_LINK_DA_PLANILHA_DE_CONTATOS_GRUPO_B'
+};
 
-// Carregar contatos por grupo
+// Carrega contatos do grupo A ou B
 async function loadContacts(grupo) {
   const url = grupo === 'A' ? SHEET_URLS.contactsA : SHEET_URLS.contactsB;
   return await csvToJson(url);
