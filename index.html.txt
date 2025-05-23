@@ -2,40 +2,30 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Elitte Chat Manager</title>
+  <title>Elitte Chat Manager</label>
   <style>
     body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background-color: #f3f4f6; /* gray-100 */
-      color: #1f2937; /* gray-800 */
+      font-family: Arial, sans-serif;
       padding: 2rem;
+      background-color: #f3f4f6;
+      color: #111827;
     }
 
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: auto;
       text-align: center;
     }
 
     h1 {
       font-size: 2rem;
-      font-weight: bold;
       margin-bottom: 0.5rem;
-    }
-
-    p.subtitle {
-      font-size: 1rem;
-      color: #6b7280; /* gray-500 */
-      margin-bottom: 2rem;
     }
 
     .buttons {
       display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
       justify-content: center;
+      gap: 1rem;
       margin-top: 2rem;
     }
 
@@ -43,44 +33,26 @@
       padding: 12px 24px;
       border: none;
       border-radius: 0.375rem;
-      font-size: 1rem;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
 
     .btn-blue {
-      background-color: #4F46E5;
+      background-color: #3b82f6;
       color: white;
-    }
-
-    .btn-blue:hover {
-      background-color: #3730a3;
-    }
-
-    .btn-gray {
-      background-color: #4B5563;
-      color: white;
-    }
-
-    .btn-gray:hover {
-      background-color: #1f2937;
     }
 
     .btn-green {
-      background-color: #10B981;
+      background-color: #10b981;
       color: white;
     }
 
-    .btn-green:hover {
-      background-color: #059669;
-    }
-
-    .profile-list {
+    .contact-list {
       margin-top: 2rem;
       text-align: left;
     }
 
-    .profile-card {
+    .card {
       background-color: white;
       border-radius: 0.5rem;
       padding: 1rem;
@@ -91,100 +63,81 @@
       align-items: center;
     }
 
-    .profile-info {
-      flex: 1;
-    }
-
     .status {
+      display: inline-block;
       padding: 4px 8px;
       border-radius: 0.375rem;
       font-size: 0.875rem;
     }
 
-    .status.aguardando_resposta {
+    .status.nao_enviado {
       background-color: #fbbf24;
       color: #7c2d12;
     }
 
-    .status.interessado {
+    .status.enviado {
       background-color: #10b981;
       color: #f0fdf4;
-    }
-
-    .status.nao_respondeu {
-      background-color: #ef4444;
-      color: #fee2e2;
-    }
-
-    .status.manual {
-      background-color: #6366f1;
-      color: #e0e7ff;
-    }
-
-    .actions button {
-      margin-left: 0.5rem;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Elitte Chat Manager</h1>
-    <p class="subtitle">Controle de 10 Perfis do Instagram</p>
+    <p>Controle de 10 Perfis do Instagram</p>
 
     <div class="buttons">
-      <button class="btn btn-blue" onclick="alert('Automação iniciada!')">Iniciar Automação</button>
-      <button class="btn btn-gray" onclick="showProfiles()">Ver Perfis</button>
+      <button class="btn btn-blue" onclick="startAutomation('A')">Iniciar Automação - Grupo A</button>
+      <button class="btn btn-green" onclick="startAutomation('B')">Iniciar Automação - Grupo B</button>
     </div>
 
-    <div class="profile-list" id="profileList"></div>
+    <div class="contact-list" id="contactList"></div>
   </div>
 
   <script src="profiles.js"></script>
   <script>
+    let messages = {};
+    let contactsA = [];
+    let contactsB = [];
+
     async function loadMessages() {
       const response = await fetch("messages.json");
+      messages = await response.json();
+    }
+
+    async function loadContacts(grupo) {
+      const response = await fetch(grupo === 'A' ? "contacts_grupo_a.json" : "contacts_grupo_b.json");
       return await response.json();
     }
 
-    function showProfiles() {
-      const container = document.getElementById("profileList");
-      container.innerHTML = "";
+    async function showContacts(grupo) {
+      const container = document.getElementById("contactList");
+      const contacts = await loadContacts(grupo);
 
-      profiles.forEach(profile => {
+      container.innerHTML = `<h2>Contatos - Grupo ${grupo}</h2>`;
+
+      contacts.forEach(contact => {
         const card = document.createElement("div");
-        card.className = "profile-card";
+        card.className = "card";
 
         const info = document.createElement("div");
-        info.className = "profile-info";
         info.innerHTML = `
-          <strong>@${profile.username}</strong><br/>
-          Status: <span class="status ${profile.status}">${profile.status.replace('_', ' ')}</span>
+          <strong>@${contact.username}</strong><br/>
+          Status: <span class="status ${contact.sent ? 'enviado' : 'nao_enviado'}">
+            ${contact.sent ? contact.lastMessage : 'Não enviado'}
+          </span>
         `;
 
         const actions = document.createElement("div");
-        actions.className = "actions";
 
-        const sendBtn = document.createElement("button");
-        sendBtn.className = "btn btn-green";
-        sendBtn.textContent = "Enviar Mensagem";
-        sendBtn.onclick = () => alert(`Mensagem enviada para @${profile.username}`);
+        if (!contact.sent) {
+          const sendBtn = document.createElement("button");
+          sendBtn.textContent = "Enviar Mensagem";
+          sendBtn.className = "btn btn-blue";
+          sendBtn.onclick = () => alert(`Mensagem enviada para @${contact.username}`);
 
-        const changeBtn = document.createElement("button");
-        changeBtn.className = "btn btn-gray";
-        changeBtn.textContent = "Alterar Status";
-        changeBtn.onclick = () => {
-          const newStatus = prompt(
-            "Digite o novo status:\n(aguarde_resposta / interessado / nao_respondeu / manual)",
-            profile.status
-          );
-          if (newStatus && ["aguardando_resposta", "interessado", "nao_respondeu", "manual"].includes(newStatus)) {
-            profile.status = newStatus;
-            showProfiles();
-          }
-        };
-
-        actions.appendChild(sendBtn);
-        actions.appendChild(changeBtn);
+          actions.appendChild(sendBtn);
+        }
 
         card.appendChild(info);
         card.appendChild(actions);
@@ -192,8 +145,13 @@
       });
     }
 
-    window.onload = () => {
-      showProfiles();
+    function startAutomation(grupo) {
+      alert(`Automação iniciada para o Grupo ${grupo}`);
+    }
+
+    window.onload = async () => {
+      await loadMessages();
+      showContacts('A'); // Padrão é mostrar Grupo A
     };
   </script>
 </body>

@@ -1,0 +1,5 @@
+[
+  { "username": "contato_grupo_b1", "sent": false, "lastMessage": null },
+  { "username": "contato_grupo_b2", "sent": true, "lastMessage": "etapa2" },
+  { "username": "contato_grupo_b3", "sent": false, "lastMessage": null }
+]
