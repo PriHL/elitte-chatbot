@@ -1,5 +1,10 @@
 [
-  { "username": "contato_grupo_a1", "sent": false, "lastMessage": null },
-  { "username": "contato_grupo_a2", "sent": true, "lastMessage": "etapa1" },
-  { "username": "contato_grupo_a3", "sent": false, "lastMessage": null }
+  { "username": "2m.scouting", "sent": false, "lastMessage": null },
+  { "username": "profissional.dm", "sent": true, "lastMessage": "etapa1" },
+  { "username": "scou.mmodels", "sent": false, "lastMessage": null }
+  { "username": "scouteronline21", "sent": false, "lastMessage": null }
+  { "username": "virtual.scoutt", "sent": false, "lastMessage": null }
+  { "username": "on.scouter", "sent": false, "lastMessage": null }
+  { "username": "mood.profissional", "sent": false, "lastMessage": null }
+  { "username": "profissional.scout", "sent": false, "lastMessage": null }
 ]
