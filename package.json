@@ -1,6 +1,2 @@
-{
-  "name": "elitte-chatbot",
-  "version": "1.0.0",
-  "type": "module",
-  ...
-}
+npm install node-fetch
+npm run bot
