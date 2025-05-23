@@ -19,20 +19,14 @@ async function csvToJson(url) {
   return data;
 }
 
-async function loadMessages() {
+// Carregar mensagens por grupo
+async function loadMessages(grupo) {
   const data = await csvToJson(SHEET_URLS.messages);
-  const grouped = { grupoA: [], grupoB: [] };
-
-  data.forEach(row => {
-    if (row.Grupo === 'A') grouped.grupoA.push(row.Mensagem);
-    else if (row.Grupo === 'B') grouped.grupoB.push(row.Mensagem);
-  });
-
-  return grouped;
+  return data.filter(msg => msg.Grupo === grupo);
 }
 
+// Carregar contatos por grupo
 async function loadContacts(grupo) {
   const url = grupo === 'A' ? SHEET_URLS.contactsA : SHEET_URLS.contactsB;
-  const data = await csvToJson(url);
-  return data;
+  return await csvToJson(url);
 }
