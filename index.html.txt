@@ -1,53 +1,171 @@
-<script>
-  async function showContacts(grupo) {
-    const container = document.getElementById("contactList");
-    container.innerHTML = `<h2>Contatos - Grupo ${grupo}</h2>`;
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Elitte Chat Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f3f4f6;
+      color: #111827;
+      margin: 0;
+    }
 
-    try {
-      // Carrega os contatos do grupo via planilha do Google Sheets
-      const contacts = await loadContacts(grupo);
+    .container {
+      max-width: 900px;
+      margin: auto;
+      text-align: center;
+    }
 
-      if (!contacts.length) {
-        container.innerHTML += "<p>Nenhum contato encontrado.</p>";
-        return;
-      }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
 
-      contacts.forEach(contact => {
-        // Cria um card para cada contato
-        const card = document.createElement("div");
-        card.className = "card";
+    p.subtitle {
+      font-size: 1rem;
+      color: #6b7280;
+      margin-bottom: 2rem;
+    }
 
-        const info = document.createElement("div");
-        info.innerHTML = `
-          <strong>@${contact.Username || contact.username}</strong><br/>
-          Status: <span class="status ${
-            contact.Status === 'Enviado' ? 'enviado' : 'nao_enviado'
-          }">${contact.Status || 'Não enviado'}</span>
-        `;
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
 
-        const actions = document.createElement("div");
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-weight: bold;
+    }
 
-        if (contact.Status !== 'Enviado') {
-          const sendBtn = document.createElement("button");
-          sendBtn.textContent = "Enviar Mensagem";
-          sendBtn.className = "btn btn-blue";
-          sendBtn.onclick = () => alert(`Mensagem enviada para @${contact.Username}`);
+    .btn-blue {
+      background-color: #3b82f6;
+      color: white;
+    }
 
-          actions.appendChild(sendBtn);
+    .btn-green {
+      background-color: #10b981;
+      color: white;
+    }
+
+    .contact-list {
+      margin-top: 2rem;
+      text-align: left;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .profile-info strong {
+      display: block;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+    }
+
+    .status.nao_enviado {
+      background-color: #fbbf24;
+      color: #7c2d12;
+    }
+
+    .status.enviado {
+      background-color: #10b981;
+      color: #f0fdf4;
+    }
+
+    .actions button {
+      margin-left: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Elitte Chat Manager</h1>
+    <p class="subtitle">Controle de 10 Perfis do Instagram</p>
+
+    <div class="buttons">
+      <button class="btn btn-blue" onclick="showContacts('A')">Carregar Grupo A</button>
+      <button class="btn btn-green" onclick="showContacts('B')">Carregar Grupo B</button>
+    </div>
+
+    <div class="contact-list" id="contactList"></div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="profiles.js"></script>
+  <script src="script.js"></script>
+
+  <script>
+    async function showContacts(grupo) {
+      const container = document.getElementById("contactList");
+      container.innerHTML = `<h2>Contatos - Grupo ${grupo}</h2>`;
+
+      try {
+        // Carrega os contatos via CSV do Google Sheets
+        const contacts = await loadContacts(grupo);
+
+        if (!contacts.length) {
+          container.innerHTML += "<p>Nenhum contato encontrado.</p>";
+          return;
         }
 
-        card.appendChild(info);
-        card.appendChild(actions);
-        container.appendChild(card);
-      });
+        contacts.forEach(contact => {
+          const card = document.createElement("div");
+          card.className = "card";
 
-    } catch (error) {
-      console.error('Erro ao carregar contatos:', error);
-      container.innerHTML += "<p>Erro ao carregar contatos. Tente novamente mais tarde.</p>";
+          const info = document.createElement("div");
+          info.innerHTML = `
+            <strong>@${contact.Username || contact.username}</strong><br/>
+            Status: <span class="status ${
+              contact.Status === 'Enviado' ? 'enviado' : 'nao_enviado'
+            }">${contact.Status || 'Não enviado'}</span>
+          `;
+
+          const actions = document.createElement("div");
+
+          if (contact.Status !== 'Enviado') {
+            const sendBtn = document.createElement("button");
+            sendBtn.textContent = "Enviar Mensagem";
+            sendBtn.className = "btn btn-blue";
+            sendBtn.onclick = () => alert(`Mensagem enviada para @${contact.Username}`);
+
+            actions.appendChild(sendBtn);
+          }
+
+          card.appendChild(info);
+          card.appendChild(actions);
+          container.appendChild(card);
+        });
+
+      } catch (error) {
+        console.error('Erro ao carregar contatos:', error);
+        container.innerHTML += "<p>Erro ao carregar contatos. Tente novamente mais tarde.</p>";
+      }
     }
-  }
 
-  window.onload = () => {
-    showContacts('A'); // Mostra contatos do Grupo A por padrão
-  };
-</script>
+    window.onload = () => {
+      showContacts('A'); // Carrega o Grupo A por padrão
+    };
+  </script>
+</body>
+</html>
