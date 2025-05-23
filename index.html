@@ -7,7 +7,7 @@
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
       background-color: #f3f4f6; /* gray-100 */
       color: #1f2937; /* gray-800 */
       padding: 2rem;
@@ -94,6 +94,21 @@
       list-style: disc inside;
       color: #4b5563;
     }
+
+    .form-edit {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 8px;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+    }
   </style>
 </head>
 <body>
@@ -109,30 +124,65 @@
 
     <div class="messages" id="messagesSection" style="display:none;">
       <h2>Mensagens Automáticas</h2>
-      <ul class="message-list">
-        <li><strong>Etapa 1:</strong> Ei! Tudo bem? Vi seu perfil e achei muito massa!</li>
-        <li><strong>Etapa 1:</strong> Oi! Sua vibe chamou minha atenção aqui no Instagram…</li>
-        <li><strong>Etapa 2:</strong> Legal conversar contigo! Como seu perfil tem chamado atenção...</li>
-        <li><strong>Etapa 3:</strong> Muito obrigado(a) por responder! Já estamos preparando sua ficha de cadastro...</li>
-        <li><strong>Etapa 3:</strong> Uau, adorei suas respostas! Vamos revisar tudo...</li>
-      </ul>
+      <ul class="message-list" id="messageList"></ul>
+
+      <h3 class="mt-4">Adicionar Nova Mensagem</h3>
+      <div class="form-edit">
+        <input type="text" id="newMessageInput" placeholder="Digite uma nova mensagem..." />
+        <select id="messageType">
+          <option value="etapa1">Etapa 1 - Cumprimento</option>
+          <option value="etapa2">Etapa 2 - Convite Presencial</option>
+          <option value="etapa3">Etapa 3 - Resposta Automática</option>
+        </select>
+        <button class="btn btn-green mt-2" onclick="addCustomMessage()">Adicionar</button>
+      </div>
     </div>
   </div>
 
   <script>
+    const messages = {
+      "etapa1": [
+        "Ei! Tudo bem? Vi seu perfil e achei muito massa!",
+        "Oi! Sua vibe chamou minha atenção aqui no Instagram…",
+        "Hey! Parabéns pelo seu trabalho! Seu conteúdo tá com um estilo único."
+      ],
+      "etapa2": [
+        "Legal conversar contigo! Como seu perfil tem chamado atenção, queremos te convidar pra uma avaliação presencial gratuita + sessão de fotos profissional.",
+        "Muito obrigado(a) pela resposta! Estamos selecionando pessoas como você pra participar de uma avaliação no mercado publicitário com fotos grátis."
+      ],
+      "etapa3": [
+        "Muito obrigado(a) por responder! Já estamos preparando sua ficha de cadastro pra avaliação.",
+        "Uau, adorei suas respostas! Vamos revisar tudo e te retornar com data e horário pra sua sessão de fotos e avaliação aqui conosco."
+      ]
+    };
+
     function showMessages() {
+      const messageList = document.getElementById("messageList");
+      messageList.innerHTML = "";
+
+      for (let key in messages) {
+        messages[key].forEach(msg => {
+          const li = document.createElement("li");
+          li.innerHTML = `<strong>${key}:</strong> ${msg}`;
+          messageList.appendChild(li);
+        });
+      }
+
       document.getElementById('messagesSection').style.display = 'block';
     }
 
-    function editMessages() {
-      let newMessage = prompt("Digite uma nova mensagem para a Etapa 1:");
-      if (newMessage) {
-        const ul = document.querySelector('.message-list');
-        const li = document.createElement('li');
-        li.innerHTML = "<strong>Etapa 1:</strong> " + newMessage;
-        ul.appendChild(li);
+    function addCustomMessage() {
+      const input = document.getElementById("newMessageInput");
+      const type = document.getElementById("messageType").value;
+      const msg = input.value.trim();
+
+      if (msg !== "") {
+        messages[type].push(msg);
+        input.value = "";
+        showMessages();
       }
     }
   </script>
 </body>
+</html>
 </html>
