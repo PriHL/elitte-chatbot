@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elitte Chat Manager</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background-color: #f3f4f6; /* gray-100 */
+      color: #1f2937; /* gray-800 */
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    p.subtitle {
+      font-size: 1rem;
+      color: #6b7280; /* gray-500 */
+      margin-bottom: 2rem;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 0.375rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-blue {
+      background-color: #4F46E5;
+      color: white;
+    }
+
+    .btn-blue:hover {
+      background-color: #3730a3;
+    }
+
+    .btn-gray {
+      background-color: #4B5563;
+      color: white;
+    }
+
+    .btn-gray:hover {
+      background-color: #1f2937;
+    }
+
+    .btn-green {
+      background-color: #10B981;
+      color: white;
+    }
+
+    .btn-green:hover {
+      background-color: #059669;
+    }
+
+    .profile-list {
+      margin-top: 2rem;
+      text-align: left;
+    }
+
+    .profile-card {
+      background-color: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .status {
+      padding: 4px 8px;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+    }
+
+    .status.aguardando_resposta {
+      background-color: #fbbf24;
+      color: #7c2d12;
+    }
+
+    .status.interessado {
+      background-color: #10b981;
+      color: #f0fdf4;
+    }
+
+    .status.nao_respondeu {
+      background-color: #ef4444;
+      color: #fee2e2;
+    }
+
+    .status.manual {
+      background-color: #6366f1;
+      color: #e0e7ff;
+    }
+
+    .actions button {
+      margin-left: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Elitte Chat Manager</h1>
+    <p class="subtitle">Controle de 10 Perfis do Instagram</p>
+
+    <div class="buttons">
+      <button class="btn btn-blue" onclick="alert('Automação iniciada!')">Iniciar Automação</button>
+      <button class="btn btn-gray" onclick="showProfiles()">Ver Perfis</button>
+    </div>
+
+    <div class="profile-list" id="profileList"></div>
+  </div>
+
+  <script src="profiles.js"></script>
+  <script>
+    async function loadMessages() {
+      const response = await fetch("messages.json");
+      return await response.json();
+    }
+
+    function showProfiles() {
+      const container = document.getElementById("profileList");
+      container.innerHTML = "";
+
+      profiles.forEach(profile => {
+        const card = document.createElement("div");
+        card.className = "profile-card";
+
+        const info = document.createElement("div");
+        info.className = "profile-info";
+        info.innerHTML = `
+          <strong>@${profile.username}</strong><br/>
+          Status: <span class="status ${profile.status}">${profile.status.replace('_', ' ')}</span>
+        `;
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const sendBtn = document.createElement("button");
+        sendBtn.className = "btn btn-green";
+        sendBtn.textContent = "Enviar Mensagem";
+        sendBtn.onclick = () => alert(`Mensagem enviada para @${profile.username}`);
+
+        const changeBtn = document.createElement("button");
+        changeBtn.className = "btn btn-gray";
+        changeBtn.textContent = "Alterar Status";
+        changeBtn.onclick = () => {
+          const newStatus = prompt(
+            "Digite o novo status:\n(aguarde_resposta / interessado / nao_respondeu / manual)",
+            profile.status
+          );
+          if (newStatus && ["aguardando_resposta", "interessado", "nao_respondeu", "manual"].includes(newStatus)) {
+            profile.status = newStatus;
+            showProfiles();
+          }
+        };
+
+        actions.appendChild(sendBtn);
+        actions.appendChild(changeBtn);
+
+        card.appendChild(info);
+        card.appendChild(actions);
+        container.appendChild(card);
+      });
+    }
+
+    window.onload = () => {
+      showProfiles();
+    };
+  </script>
+</body>
+</html>
