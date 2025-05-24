@@ -1,38 +1,22 @@
+// URLs das planilhas publicadas como CSV
 const SHEET_URLS = {
-  messages: 'COLE_AQUI_O_LINK_DA_PLANILHA_DE_MENSAGENS',
-  contactsA: 'COLE_AQUI_O_LINK_DA_PLANILHA_DE_CONTATOS_GRUPO_A',
-  contactsB: 'COLE_AQUI_O_LINK_DA_PLANILHA_DE_CONTATOS_GRUPO_B'
+  groupA: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSj8LIFK3j19XrJMgq56HYahkCYP5eZk_P-JD5tNfj9G_UmUkylqmCopvwko4NfKQ9YzfF9SykNEsWw/pub?output=csv',
+  groupB: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSnHTiggKHA64vES0rXQ7I-6imiVH4CBoBXlK73KeqMadODhffZbSfarp82Qsa9p7XLpiuiXIe-5EAP/pub?output=csv',
+  groupC: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ69lM2AAQWKsvQuC2KtdJVJM_1J2-8Qj0Vex4SgEsBysty8nziuYrgFG25IUAbhXqtXK60QINVpqec/pub?output=csv'
 };
 
-async function csvToJson(url) {
+// Função pra carregar CSV e transformar em JSON
+async function loadContactsFromSheet(url) {
   const response = await fetch(url);
   const text = await response.text();
   const lines = text.split('\n');
   const headers = lines[0].split(',');
-  const data = lines.slice(1).map(line => {
+  const contacts = lines.slice(1).map(line => {
     const values = line.split(',');
     return headers.reduce((obj, header, i) => {
       obj[header.trim()] = values[i] ? values[i].trim() : '';
       return obj;
     }, {});
   });
-  return data;
-}
-
-async function loadMessages() {
-  const data = await csvToJson(SHEET_URLS.messages);
-  const grouped = { grupoA: [], grupoB: [] };
-
-  data.forEach(row => {
-    if (row.Grupo === 'A') grouped.grupoA.push(row.Mensagem);
-    else if (row.Grupo === 'B') grouped.grupoB.push(row.Mensagem);
-  });
-
-  return grouped;
-}
-
-async function loadContacts(grupo) {
-  const url = grupo === 'A' ? SHEET_URLS.contactsA : SHEET_URLS.contactsB;
-  const data = await csvToJson(url);
-  return data;
+  return contacts;
 }
