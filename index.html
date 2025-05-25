@@ -22,38 +22,17 @@
       margin-bottom: 0.5rem;
     }
 
-    .buttons {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .btn {
-      padding: 12px 24px;
-      border: none;
+    select {
+      display: block;
+      margin: auto;
+      margin-top: 1rem;
+      padding: 8px 16px;
       border-radius: 0.375rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      font-weight: bold;
+      border: 1px solid #ccc;
+      width: 250px;
     }
 
-    .btn-blue {
-      background-color: #3b82f6;
-      color: white;
-    }
-
-    .btn-green {
-      background-color: #10b981;
-      color: white;
-    }
-
-    .btn-red {
-      background-color: #ef4444;
-      color: white;
-    }
-
-    .contact-list {
+    .contact-list, .history-list {
       margin-top: 2rem;
       display: flex;
       flex-wrap: wrap;
@@ -61,7 +40,7 @@
       justify-content: center;
     }
 
-    .contact-card {
+    .contact-card, .history-card {
       background-color: white;
       border-radius: 0.5rem;
       padding: 1rem;
@@ -70,7 +49,7 @@
       transition: transform 0.2s ease;
     }
 
-    .contact-card:hover {
+    .contact-card:hover, .history-card:hover {
       transform: scale(1.02);
     }
 
@@ -91,6 +70,16 @@
       background-color: #10b981;
       color: #f0fdf4;
     }
+
+    button.btn-blue {
+      margin-top: 1rem;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 0.375rem;
+      background-color: #3b82f6;
+      color: white;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -98,64 +87,13 @@
     <h1>Elitte Chat Manager</h1>
     <p>Controle de 10 Perfis do Instagram</p>
 
-    <div class="buttons">
-      <button class="btn btn-blue" onclick="loadContacts('groupA')">Carregar Grupo A</button>
-      <button class="btn btn-green" onclick="loadContacts('groupB')">Carregar Grupo B</button>
-      <button class="btn btn-red" onclick="loadContacts('groupC')">Carregar Grupo C</button>
-    </div>
+    <label for="profileSelector">Escolha um perfil:</label>
+    <select id="profileSelector"></select>
 
     <div class="contact-list" id="contactList"></div>
+    <div class="history-list" id="historyList"></div>
   </div>
 
-  <!-- Scripts -->
   <script src="script.js"></script>
-
-  <script>
-    // Carrega contatos baseado no grupo
-    async function loadContacts(grupo) {
-      let url = '';
-
-      if (grupo === 'groupA') url = SHEET_URLS.groupA;
-      else if (grupo === 'groupB') url = SHEET_URLS.groupB;
-      else if (grupo === 'groupC') url = SHEET_URLS.groupC;
-
-      const container = document.getElementById("contactList");
-      container.innerHTML = `<h2>Contatos - Grupo ${grupo.toUpperCase()}</h2>`;
-
-      try {
-        const contacts = await loadContactsFromSheet(url);
-
-        if (!contacts.length) {
-          container.innerHTML += "<p>Nenhum contato encontrado.</p>";
-          return;
-        }
-
-        contacts.forEach(contact => {
-          const card = document.createElement("div");
-          card.className = "contact-card";
-
-          const currentStatus = contact.Status || "Não enviado";
-          const statusClass = currentStatus === "Enviado" ? "enviado" : "nao_enviado";
-
-          card.innerHTML = `
-            <strong>@${contact.Username}</strong><br/>
-            Tipo: ${contact.Tipo}<br/>
-            Status: <span class="status ${statusClass}">${currentStatus}</span><br/>
-            Última Etapa: ${contact["Última Etapa"] || "Nenhuma"}
-          `;
-
-          container.appendChild(card);
-        });
-
-      } catch (error) {
-        console.error('Erro ao carregar contatos:', error);
-        container.innerHTML += "<p>❌ Erro ao carregar contatos. Tente novamente mais tarde.</p>";
-      }
-    }
-
-    window.onload = () => {
-      loadContacts('groupA'); // Carrega Grupo A por padrão
-    };
-  </script>
 </body>
 </html>
