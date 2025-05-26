@@ -2,106 +2,36 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Elitte Chat Manager</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f3f4f6;
-      color: #111827;
-      padding: 2rem;
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .buttons {
-      display: flex;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    button {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 0.375rem;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
-    }
-
-    .btn-start {
-      background-color: #3b82f6;
-      color: white;
-    }
-
-    .btn-stop {
-      background-color: #ef4444;
-      color: white;
-    }
-
-    .contact-list {
-      margin-top: 2rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-    }
-
-    .contact-card {
-      background-color: white;
-      border-radius: 0.5rem;
-      padding: 1rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      width: 220px;
-      transition: transform 0.2s ease;
-    }
-
-    .contact-card:hover {
-      transform: scale(1.02);
-    }
-
-    .status {
-      display: inline-block;
-      margin-top: 0.5rem;
-      padding: 4px 8px;
-      border-radius: 0.375rem;
-      font-size: 0.875rem;
-    }
-
-    .status.nao_enviado {
-      background-color: #fbbf24;
-      color: #7c2d12;
-    }
-
-    .status.enviado {
-      background-color: #10b981;
-      color: #f0fdf4;
-    }
-
-    .status.respondido {
-      background-color: #8b5cf6;
-      color: #f3e8ff;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1>Elitte Chat Manager</h1>
-    <p>Controle de 10 Perfis do Instagram</p>
+    <header class="header">
+      <h1>Elitte Chat Manager</h1>
+      <p>Controle de 10 Perfis do Instagram</p>
+    </header>
 
-    <div class="buttons">
-      <button class="btn-start" onclick="startBot()">Iniciar Robô</button>
-      <button class="btn-stop" onclick="stopBot()">Parar Robô</button>
-    </div>
+    <main class="main">
+      <section class="controls">
+        <label for="profileSelector">Escolha um perfil:</label>
+        <select id="profileSelector"></select>
 
-    <div class="contact-list" id="contactList"></div>
+        <button id="startBotBtn" class="btn btn-start">Iniciar Robô</button>
+        <button id="stopBotBtn" class="btn btn-stop">Parar Robô</button>
+      </section>
+
+      <section class="logs">
+        <h2>Status da Automação</h2>
+        <div id="statusLog" class="log-box"></div>
+      </section>
+
+      <section class="contacts-section">
+        <h2>Contatos - Grupo <span id="selectedGroupLabel">A</span></h2>
+        <div class="contact-list" id="contactList"></div>
+      </section>
+    </main>
   </div>
 
   <script src="script.js"></script>

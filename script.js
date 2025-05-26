@@ -1,120 +1,126 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
-  <title>Elitte Chat Manager</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f3f4f6;
-      color: #111827;
-      padding: 2rem;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+// Dados dos perfis (você pode carregar via API depois)
+const profiles = [
+  { id: 1, username: "2m.scouting", grupo: "A" },
+  { id: 2, username: "scou.mmodels", grupo: "A" },
+  { id: 3, username: "scouteronline21", grupo: "A" },
+  { id: 4, username: "virtual.scoutt", grupo: "A" },
+  { id: 5, username: "on.scouter", grupo: "A" },
+  { id: 6, username: "profissional.scout", grupo: "A" },
+  { id: 7, username: "mood.profissional", grupo: "A" },
+  { id: 8, username: "profissional.dm", grupo: "A" },
+  { id: 9, username: "virtual.choices", grupo: "B" },
+  { id: 10, username: "your.digitaltransition", grupo: "C" }
+];
+
+// Contatos segmentados por tipo
+const contacts = {
+  A: [
+    { name: "ana_lopes", tipo: "pessoa_fisica", status: "Não enviado" },
+    { name: "carlos_moraes", tipo: "pessoa_fisica", status: "Enviado" },
+    { name: "mariana_santos", tipo: "pessoa_fisica", status: "Não enviado" },
+    { name: "jessica_df", tipo: "pessoa_fisica", status: "Não enviado" }
+  ],
+  B: [
+    { name: "moda_estilo_df", tipo: "influencer", status: "Enviado" },
+    { name: "fotos_profissional", tipo: "influencer", status: "Não enviado" },
+    { name: "beleza_carioca", tipo: "influencer", status: "Não enviado" },
+    { name: "fitness_life_df", tipo: "influencer", status: "Enviado" }
+  ],
+  C: [
+    { name: "dr_carlos_medico", tipo: "medico", status: "Não enviado" },
+    { name: "studio_flor_do_cerrado", tipo: "atelie", status: "Não enviado" },
+    { name: "clinic_centro_df", tipo: "clinica_medica", status: "Enviado" },
+    { name: "rejuvenescer_clinica", tipo: "clinica_medica", status: "Não enviado" },
+    { name: "beleza_norte_shopping", tipo: "salao_beauty", status: "Enviado" },
+    { name: "cabelo_e_estilo", tipo: "salao_beauty", status: "Não enviado" },
+    { name: "adv_tatiana_direito", tipo: "advogado", status: "Não enviado" },
+    { name: "foto_andre_df", tipo: "fotografo", status: "Enviado" }
+  ]
+};
+
+// Preenche seleção de perfis
+const profileSelector = document.getElementById("profileSelector");
+const contactListDiv = document.getElementById("contactList");
+const selectedGroupLabel = document.getElementById("selectedGroupLabel");
+
+profiles.forEach(profile => {
+  const option = document.createElement("option");
+  option.value = profile.id;
+  option.textContent = `${profile.username} (Grupo ${profile.grupo})`;
+  profileSelector.appendChild(option);
+});
+
+// Mostra contatos ao selecionar perfil
+profileSelector.onchange = () => {
+  const selectedProfile = profiles.find(p => p.id == profileSelector.value);
+
+  if (!selectedProfile) return;
+
+  selectedGroupLabel.textContent = selectedProfile.grupo.toUpperCase();
+  contactListDiv.innerHTML = `<h3>Contatos - @${selectedProfile.username}</h3>`;
+
+  const grupo = selectedProfile.grupo;
+  const filteredContacts = contacts[grupo] || [];
+
+  if (filteredContacts.length === 0) {
+    contactListDiv.innerHTML += "<p>Nenhum contato disponível.</p>";
+    return;
+  }
+
+  filteredContacts.forEach(contact => {
+    const card = document.createElement("div");
+    card.className = "contact-card";
+
+    const currentStatus = contact.status || "Não enviado";
+    const statusClass = contact.status === "Enviado"
+      ? "enviado"
+      : contact.status === "Respondido"
+        ? "respondido"
+        : "nao_enviado";
+
+    card.innerHTML = `
+      <strong>@${contact.name}</strong><br/>
+      Tipo: ${contact.tipo}<br/>
+      Status: <span class="status ${statusClass}">${currentStatus}</span><br/>
+      Última Etapa: ${contact.lastMessage || 'Nenhuma'}
+    `;
+
+    contactListDiv.appendChild(card);
+  });
+};
+
+// Função pra adicionar log na interface
+function addLog(message) {
+  const logBox = document.getElementById("statusLog");
+  const timestamp = new Date().toLocaleTimeString('pt-BR');
+  logBox.innerHTML += `[${timestamp}] ${message}\n`;
+  logBox.scrollTop = logBox.scrollHeight;
+}
+
+// Simula início da automação
+document.getElementById("startBotBtn").onclick = () => {
+  addLog("🟢 Iniciando robô...");
+  simulateBotStart();
+};
+
+// Simula parada da automação
+document.getElementById("stopBotBtn").onclick = () => {
+  addLog("🔴 Parando robô...");
+};
+
+// Simulação de início do bot
+function simulateBotStart() {
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i >= profiles.length) {
+      clearInterval(interval);
+      addLog("🏁 Todos os perfis terminaram o envio.");
+      return;
     }
 
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-    }
+    const profile = profiles[i];
+    addLog(`📦 Usando perfil: @${profile.username} → Grupo ${profile.grupo}`);
+    i++;
+  }, 3000); // simula o envio a cada 3 segundos
+}
 
-    .buttons {
-      display: flex;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    button {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 0.375rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      font-weight: bold;
-    }
-
-    .btn-start {
-      background-color: #3b82f6;
-      color: white;
-    }
-
-    .btn-stop {
-      background-color: #ef4444;
-      color: white;
-    }
-
-    .contact-list {
-      margin-top: 2rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-    }
-
-    .contact-card {
-      background-color: white;
-      border-radius: 0.5rem;
-      padding: 1rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      width: 220px;
-      transition: transform 0.2s ease;
-    }
-
-    .contact-card:hover {
-      transform: scale(1.02);
-    }
-
-    .status {
-      display: inline-block;
-      margin-top: 0.5rem;
-      padding: 4px 8px;
-      border-radius: 0.375rem;
-      font-size: 0.875rem;
-    }
-
-    .status.nao_enviado {
-      background-color: #fbbf24;
-      color: #7c2d12;
-    }
-
-    .status.enviado {
-      background-color: #10b981;
-      color: #f0fdf4;
-    }
-
-    .status.respondido {
-      background-color: #8b5cf6;
-      color: #f3e8ff;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Elitte Chat Manager</h1>
-    <p>Controle de 10 Perfis do Instagram</p>
-
-    <div class="buttons">
-      <button class="btn-start" onclick="startBot()">Iniciar Robô</button>
-      <button class="btn-stop" onclick="stopBot()">Parar Robô</button>
-    </div>
-
-    <div class="contact-list" id="contactList"></div>
-  </div>
-
-  <!-- Scripts -->
-  <script src="script.js"></script>
-  <script>
-    async function startBot() {
-      console.log("🟢 Iniciando robô...");
-      await window.bot.start(); // Chama a função do bot.js
-    }
-
-    function stopBot() {
-      console.log("🔴 Parando robô...");
-      window.bot.stop(); // Chama a função de parada
-    }
-  </script>
-</body>
-</html>
