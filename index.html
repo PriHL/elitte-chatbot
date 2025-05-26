@@ -9,12 +9,11 @@
       background-color: #f3f4f6;
       color: #111827;
       padding: 2rem;
-    }
-
-    .container {
-      max-width: 900px;
-      margin: auto;
-      text-align: center;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     h1 {
@@ -22,17 +21,32 @@
       margin-bottom: 0.5rem;
     }
 
-    select {
-      display: block;
-      margin: auto;
-      margin-top: 1rem;
-      padding: 8px 16px;
-      border-radius: 0.375rem;
-      border: 1px solid #ccc;
-      width: 250px;
+    .buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
     }
 
-    .contact-list, .history-list {
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-start {
+      background-color: #3b82f6;
+      color: white;
+    }
+
+    .btn-stop {
+      background-color: #ef4444;
+      color: white;
+    }
+
+    .contact-list {
       margin-top: 2rem;
       display: flex;
       flex-wrap: wrap;
@@ -40,7 +54,7 @@
       justify-content: center;
     }
 
-    .contact-card, .history-card {
+    .contact-card {
       background-color: white;
       border-radius: 0.5rem;
       padding: 1rem;
@@ -49,7 +63,7 @@
       transition: transform 0.2s ease;
     }
 
-    .contact-card:hover, .history-card:hover {
+    .contact-card:hover {
       transform: scale(1.02);
     }
 
@@ -71,14 +85,9 @@
       color: #f0fdf4;
     }
 
-    button.btn-blue {
-      margin-top: 1rem;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 0.375rem;
-      background-color: #3b82f6;
-      color: white;
-      cursor: pointer;
+    .status.respondido {
+      background-color: #8b5cf6;
+      color: #f3e8ff;
     }
   </style>
 </head>
@@ -87,11 +96,12 @@
     <h1>Elitte Chat Manager</h1>
     <p>Controle de 10 Perfis do Instagram</p>
 
-    <label for="profileSelector">Escolha um perfil:</label>
-    <select id="profileSelector"></select>
+    <div class="buttons">
+      <button class="btn-start" onclick="startBot()">Iniciar Robô</button>
+      <button class="btn-stop" onclick="stopBot()">Parar Robô</button>
+    </div>
 
     <div class="contact-list" id="contactList"></div>
-    <div class="history-list" id="historyList"></div>
   </div>
 
   <script src="script.js"></script>
