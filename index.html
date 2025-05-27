@@ -2,38 +2,23 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Elitte Chat Manager</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <header class="header">
-      <h1>Elitte Chat Manager</h1>
-      <p>Controle de 10 Perfis do Instagram</p>
-    </header>
+    <h1>Elitte Chat Manager</h1>
+    <p>Controle de 10 Perfis do Instagram</p>
 
-    <main class="main">
-      <section class="controls">
-        <label for="profileSelector">Escolha um perfil:</label>
-        <select id="profileSelector"></select>
+    <div class="buttons">
+      <button onclick="startBot()">Iniciar Robô</button>
+      <button onclick="stopBot()">Parar Robô</button>
+    </div>
 
-        <button id="startBotBtn" class="btn btn-start">Iniciar Robô</button>
-        <button id="stopBotBtn" class="btn btn-stop">Parar Robô</button>
-      </section>
-
-      <section class="logs">
-        <h2>Status da Automação</h2>
-        <div id="statusLog" class="log-box"></div>
-      </section>
-
-      <section class="contacts-section">
-        <h2>Contatos - Grupo <span id="selectedGroupLabel">A</span></h2>
-        <div class="contact-list" id="contactList"></div>
-      </section>
-    </main>
+    <div class="log-box" id="logBox"></div>
   </div>
 
+  <!-- Scripts -->
   <script src="script.js"></script>
 </body>
 </html>
