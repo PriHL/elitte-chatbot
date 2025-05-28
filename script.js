@@ -1,16 +1,6 @@
 let isRunning = true;
 
-// Simula carregamento do bot
-function startBot() {
-  log("🟢 Iniciando automação...");
-  runBot();
-}
-
-function stopBot() {
-  isRunning = false;
-  log("🔴 Parando automação...");
-}
-
+// Simula rodar o bot.js via interface
 function log(message) {
   const logBox = document.getElementById("logBox");
   const timestamp = new Date().toLocaleTimeString('pt-BR');
@@ -18,9 +8,11 @@ function log(message) {
   logBox.scrollTop = logBox.scrollHeight;
 }
 
-// Roda todas as etapas nos 10 perfis
-async function runBot() {
-  for (let i = 0; i < profiles.length && isRunning; i++) {
+// Inicia a automação
+async function startBot() {
+  log("🟢 Iniciando automação...");
+
+  for (let i = 0; i < profiles.length; i++) {
     const profile = profiles[i];
     const grupo = profile.grupo.toLowerCase();
 
@@ -50,8 +42,8 @@ async function runBot() {
           }
         }, 10000);
 
-        const delayBetweenContacts = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000;
-        await new Promise(r => setTimeout(r, delayBetweenContacts));
+        const delay = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000;
+        await new Promise(r => setTimeout(r, delay));
       }
 
       await browser.close();
