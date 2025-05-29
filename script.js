@@ -47,8 +47,10 @@ setInterval(() => {
       profile.lastActivity = `Mensagem enviada para @usuario_alvo_${Math.floor(Math.random() * 1000)}`;
     } else if (Math.random() > 0.5) {
       profile.status = "online";
+      profile.lastActivity = "Logado há alguns segundos";
     } else {
       profile.status = "offline";
+      profile.lastActivity = "";
     }
   });
 
@@ -56,16 +58,3 @@ setInterval(() => {
 }, 5000);
 
 updateDashboard(); // Primeira renderização
-
-const play = require('play-sound')();
-
-function notifyUser(contactUsername) {
-  console.log(`🔔 @${contactUsername} respondeu! É hora de interagir manualmente.`);
-  play.play('./notification.mp3', (err) => {
-    if (err) {
-      console.error("🔊 Erro ao tocar som:", err.message);
-    } else {
-      console.log("🔊 Som tocado com sucesso!");
-    }
-  });
-}

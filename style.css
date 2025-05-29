@@ -1,12 +1,13 @@
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   font-family: 'Segoe UI', sans-serif;
   background-color: #f9fafb;
   color: #111827;
-  margin: 0;
   padding: 2rem;
   height: 100vh;
   display: flex;
@@ -15,22 +16,33 @@ body {
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 1200px;
   width: 100%;
   text-align: center;
+}
+
+.profiles-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
 .profile-card {
   background-color: white;
   border-radius: 0.5rem;
   padding: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
+  width: 220px;
+  min-height: 140px;
+  text-align: left;
+  position: relative;
 }
 
 .profile-card:hover {
-  transform: scale(1.01);
+  transform: scale(1.02);
 }
 
 .status {
@@ -39,6 +51,7 @@ body {
   padding: 4px 8px;
   border-radius: 0.375rem;
   font-size: 0.875rem;
+  font-weight: bold;
 }
 
 .status.online {
