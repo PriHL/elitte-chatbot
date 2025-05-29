@@ -2,16 +2,20 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <title>Elitte Chat Manager - Dashboard</title>
+  <title>Elitte Chat Manager</title>
   <link rel="stylesheet" href="style.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
   <div class="container">
     <h1>Elitte Chat Manager</h1>
     <p>Controle de 10 Perfis do Instagram</p>
 
-    <div class="profiles-grid" id="profilesContainer"></div>
+    <div class="buttons">
+      <button onclick="startBot()">Iniciar Robô</button>
+      <button onclick="stopBot()">Parar Robô</button>
+    </div>
+
+    <div class="log-box" id="logBox"></div>
   </div>
 
   <!-- Scripts -->
