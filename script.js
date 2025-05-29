@@ -1,33 +1,33 @@
-// Simula logs em tempo real
-function log(message) {
-  const logBox = document.getElementById("logBox");
-  const timestamp = new Date().toLocaleTimeString('pt-BR');
-  logBox.innerHTML += `[${timestamp}] ${message}\n`;
-  logBox.scrollTop = logBox.scrollHeight;
+const audio = new Audio('./notification.wav');
+
+function notifyUser(contactUsername) {
+  console.log(`🔔 @${contactUsername} respondeu! É hora de interagir.`);
+  audio.play().catch(err => console.error("🔊 Erro ao tocar som:", err));
 }
 
-// Simula rodar o bot
-function startBot() {
-  log("🟢 Iniciando automação...");
-  runBot();
-}
+async function loadHistoryFromSheet() {
+  try {
+    const response = await fetch(SHEET_URLS.historySheetUrl);
+    const text = await response.text();
+    const lines = text.split('\n').slice(1); // ignora cabeçalho
 
-function stopBot() {
-  log("🔴 Parando automação...");
-}
+    lines.forEach(line => {
+      const [date, time, profile, contact, status, message] = line.split(',');
 
-// Simula função do bot.js
-async function runBot() {
-  for (let i = 0; i < 10; i++) {
-    const username = ["@2m.scouting", "@scou.mmodels", "@virtual.choices", "@your.digitaltransition"][i % 4];
+      const foundProfile = profiles.find(p => p.username === profile);
+      if (foundProfile && contact) {
+        foundProfile.status = "respondido";
+        foundProfile.lastReplied = contact;
+      }
+    });
 
-    log(`📦 Usando perfil: ${username}`);
-    log(`🔍 Procurando contato...`);
-    log(`📩 Mensagem enviada para @usuario_alvo_${i}`);
+    updateDashboard();
 
-    const delay = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000;
-    await new Promise(r => setTimeout(r, delay));
+  } catch (error) {
+    console.error("❌ Erro ao carregar histórico:", error.message);
   }
-
-  log("🏁 Todos os perfis terminaram o envio.");
 }
+
+// Atualiza a cada 10 segundos
+setInterval(loadHistoryFromSheet, 10000);
+loadHistoryFromSheet();
