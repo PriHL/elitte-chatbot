@@ -1,62 +1,71 @@
-let isRunning = true;
+// Dados dos 10 perfis do Instagram
+const profiles = [
+  { id: 1, username: "2m.scouting", grupo: "A", status: "offline", lastActivity: "" },
+  { id: 2, username: "scou.mmodels", grupo: "A", status: "offline", lastActivity: "" },
+  { id: 3, username: "scouteronline21", grupo: "A", status: "offline", lastActivity: "" },
+  { id: 4, username: "virtual.scoutt", grupo: "A", status: "offline", lastActivity: "" },
+  { id: 5, username: "on.scouter", grupo: "A", status: "offline", lastActivity: "" },
+  { id: 6, username: "profissional.scout", grupo: "A", status: "offline", lastActivity: "" },
+  { id: 7, username: "mood.profissional", grupo: "A", status: "offline", lastActivity: "" },
+  { id: 8, username: "profissional.dm", grupo: "A", status: "offline", lastActivity: "" },
+  { id: 9, username: "virtual.choices", grupo: "B", status: "offline", lastActivity: "" },
+  { id: 10, username: "your.digitaltransition", grupo: "C", status: "offline", lastActivity: "" }
+];
 
-// Simula rodar o bot.js via interface
-function log(message) {
-  const logBox = document.getElementById("logBox");
-  const timestamp = new Date().toLocaleTimeString('pt-BR');
-  logBox.innerHTML += `[${timestamp}] ${message}\n`;
-  logBox.scrollTop = logBox.scrollHeight;
+const profileContainer = document.getElementById("profilesContainer");
+
+function updateDashboard() {
+  profileContainer.innerHTML = "";
+
+  profiles.forEach(profile => {
+    const card = document.createElement("div");
+    card.className = "profile-card";
+
+    const currentStatus = profile.status || "offline";
+    const statusClass = currentStatus === "online"
+      ? "online"
+      : currentStatus === "sending"
+        ? "sending"
+        : "offline";
+
+    card.innerHTML = `
+      <strong>@${profile.username}</strong><br/>
+      Grupo: ${profile.grupo}<br/>
+      Status: <span class="status ${statusClass}">${currentStatus.toUpperCase()}</span><br/>
+      Última Atividade: ${profile.lastActivity || 'Nenhuma'}
+    `;
+
+    profileContainer.appendChild(card);
+  });
 }
 
-// Inicia a automação
-async function startBot() {
-  log("🟢 Iniciando automação...");
-
-  for (let i = 0; i < profiles.length; i++) {
-    const profile = profiles[i];
-    const grupo = profile.grupo.toLowerCase();
-
-    log(`📦 Usando perfil: @${profile.username} → Grupo ${grupo.toUpperCase()}`);
-
-    let browser, page;
-
-    try {
-      browser = await chromium.launch({ headless: false });
-      page = await browser.newPage();
-
-      await loginInstagram(page, profile);
-
-      const contacts = await loadContactsFromSheet(grupo);
-
-      for (let j = 0; j < contacts.length; j++) {
-        const contact = contacts[j];
-
-        if (!contact.Username || contact.Status === 'Enviado') continue;
-
-        await sendMessageToContact(page, contact, profile);
-
-        setTimeout(async () => {
-          const replied = await checkIfContactReplied(page, contact);
-          if (!replied) {
-            log(`⏳ Nenhuma resposta de @${contact.Username}`);
-          }
-        }, 10000);
-
-        const delay = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000;
-        await new Promise(r => setTimeout(r, delay));
-      }
-
-      await browser.close();
-
-      const delayBetweenProfiles = Math.floor(Math.random() * (15000 - 10000 + 1)) + 10000;
-      log(`⏳ Pausa de ${delayBetweenProfiles / 1000}s antes do próximo perfil...`);
-      await new Promise(r => setTimeout(r, delayBetweenProfiles));
-
-    } catch (e) {
-      log(`🚫 Erro com perfil @${profile.username}: ${e.message}`);
-      if (browser && browser.isConnected()) await browser.close();
+// Simula mudança de status dos perfis (você pode substituir por dados reais)
+setInterval(() => {
+  profiles.forEach(profile => {
+    if (Math.random() > 0.8) {
+      profile.status = "sending";
+      profile.lastActivity = `Mensagem enviada para @usuario_alvo_${Math.floor(Math.random() * 1000)}`;
+    } else if (Math.random() > 0.5) {
+      profile.status = "online";
+    } else {
+      profile.status = "offline";
     }
-  }
+  });
 
-  log("🏁 Todos os perfis terminaram o envio.");
+  updateDashboard();
+}, 5000);
+
+updateDashboard(); // Primeira renderização
+
+const play = require('play-sound')();
+
+function notifyUser(contactUsername) {
+  console.log(`🔔 @${contactUsername} respondeu! É hora de interagir manualmente.`);
+  play.play('./notification.mp3', (err) => {
+    if (err) {
+      console.error("🔊 Erro ao tocar som:", err.message);
+    } else {
+      console.log("🔊 Som tocado com sucesso!");
+    }
+  });
 }
