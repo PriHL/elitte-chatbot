@@ -23,7 +23,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  gap: 1rem;
+  gap: 1.5rem;
   margin-top: 2rem;
 }
 
@@ -31,7 +31,7 @@ body {
   background-color: white;
   border-radius: 0.5rem;
   padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   transition: transform 0.2s ease;
   width: 220px;
   min-height: 140px;
@@ -60,6 +60,11 @@ body {
 .status.offline {
   background-color: #fbbf24;
   color: #7c2d12;
+}
+
+.status.sending {
+  background-color: #3b82f6;
+  color: #dbeafe;
 }
 
 .status.respondido {
