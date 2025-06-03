@@ -1,21 +1,12 @@
- // Dados dos perfis do Instagram
+// Dados simulados dos perfis do Instagram
 const profiles = [
-  // Grupo A - pessoas físicas
-  { id: 1, username: "2m.scouting", password: "dfgo000", grupo: "A" },
-  { id: 2, username: "profissional.dm", password: "bhgo82", grupo: "A" },
-  { id: 3, username: "scou.mmodels", password: "mkt1928", grupo: "A" },
-  { id: 4, username: "scouteronline21", password: "arl1313", grupo: "A" },
-  { id: 5, username: "virtual.scoutt", password: "gup0909", grupo: "A" },
-  { id: 6, username: "on.scouter", password: "gup0909", grupo: "A" },
-  { id: 7, username: "mood.profissional", password: "luu333", grupo: "A" },
-  { id: 8, username: "profissional.scout", password: "jj900000", grupo: "A" },
-  { id: 9, username: "virtual.choices", password: "verdade", grupo: "B" },
-  { id: 10, username: "your.digitaltransition", password: "verdade", grupo: "C" }
+  { username: "perfil1", grupo: "A", status: "offline", lastReplied: null },
+  { username: "perfil2", grupo: "B", status: "offline", lastReplied: null },
+  { username: "perfil3", grupo: "C", status: "offline", lastReplied: null }
 ];
 
-const profileContainer = document.getElementById("profilesContainer");
-
-function updateDashboard() {
+function updateDashboard(profiles) {
+  const profileContainer = document.getElementById("profilesContainer");
   profileContainer.innerHTML = "";
 
   profiles.forEach(profile => {
@@ -40,20 +31,16 @@ function updateDashboard() {
   });
 }
 
-// Simula mudança de status dos perfis
+// Atualiza dados a cada 5 segundos
 setInterval(() => {
-  profiles.forEach(profile => {
-    if (Math.random() > 0.9) {
-      profile.status = "respondido";
-      profile.lastReplied = `@usuario_alvo_${Math.floor(Math.random() * 1000)}`;
-    } else if (Math.random() > 0.5) {
-      profile.status = "sending";
-    } else {
-      profile.status = "offline";
-    }
-  });
+  const updatedProfiles = [...profiles].map(p => ({
+    ...p,
+    status: ['online', 'offline', 'sending', 'respondido'][Math.floor(Math.random() * 4)],
+    lastReplied: Math.random() > 0.9 ? `@usuario_alvo_${Math.floor(Math.random() * 1000)}` : p.lastReplied
+  }));
 
-  updateDashboard();
+  updateDashboard(updatedProfiles);
 }, 5000);
 
-updateDashboard(); // Primeira renderização
+// Carrega dados iniciais
+updateDashboard(profiles);
